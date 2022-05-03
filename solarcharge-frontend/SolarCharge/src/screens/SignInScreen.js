@@ -12,17 +12,23 @@ import {
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 import { Icon } from "react-native-elements";
 import { Input } from "react-native-elements";
+import { BASE_IP } from '../../config';
 import Styles from '../../assets/css/Styles';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const device = Dimensions.get("window");
+
 export default class SignInScreen extends Component {
   state={
       email:"",
       password:"",
-      errorEmail:"error",
+      errorEmail:"",
       errorPassword:"",
       showPassword:false,
       rightIcon:'eye',
   }
+
   handlePasswordVisibility = () => {
     if (this.state.showPassword=== false) {
         this.setState({
@@ -36,7 +42,36 @@ export default class SignInScreen extends Component {
         showPassword:false,
        });
     }
-  };
+  }
+
+  onSubmit = async() => {
+      try{
+       const response = await axios({
+       method : 'POST',
+       url : `http://${BASE_IP}:3001/loginUser`,
+       headers : {
+         Accept : 'application/json',
+         'Content-Type' : 'application/json'
+       },
+       data : JSON.stringify({
+         email : this.state.email ,
+         password : this.state.password
+       })
+     });
+     if(response.data){
+        if(response.data.successStatus){
+           console.log(response.data);
+           AsyncStorage.setItem('email' , response.data.email);
+           this.props.navigation.navigate('Home');
+        }else{
+           alert(response.data.message);
+        }
+     }
+    }catch(err){
+       console.log(err);
+    }
+   }
+
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
@@ -127,16 +162,14 @@ export default class SignInScreen extends Component {
                       color: "#d2d2d2",
                     }}
                   >
-                    Forget Password ?
+                    Forgot Password ?
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   elevation={20}
                   style={Styles.btn1}
-                  onPress={() => {
-                    this.props.navigation.navigate("Home");
-                  }}
+                  onPress={() => this.onSubmit()}
                 >
                   <Text style={Styles.text16} >LOGIN </Text>
                 </TouchableOpacity>

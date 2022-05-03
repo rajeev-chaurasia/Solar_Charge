@@ -1,4 +1,5 @@
-pragma solidity ^ 0.8.13;
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
 
 contract SolarCharge {
 
@@ -82,25 +83,25 @@ contract SolarCharge {
 
 		// Station does not exist
 		if(stations[ID].rate==0){
-			revert();
+			revert("Station doesnot exist");
 		}
 
 		// Station is busy
 		if(block.timestamp < (stations[ID].lastActivated+stations[ID].lastDuration)){
-			revert();
+			revert("Station is busy");
 		}
 
 		uint coinsRequired = stations[ID].rate*duration;
 
 		// User has insufficient coins
 		if (users[email].solcoins<coinsRequired){
-			revert();
+			revert("Insufficient coins");
 		}
 
         users[email].solcoins -= coinsRequired;
         stations[ID].coinBalance += coinsRequired;
         stations[ID].lastActivated = block.timestamp;
-        stations[ID].lastDuration = duration;
+        stations[ID].lastDuration = duration*60;
 	}
 
 	function getStationState(uint ID) public view returns (bool){

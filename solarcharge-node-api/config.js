@@ -1,6 +1,6 @@
-const SOLARCHARGE_ADDRESS = '0xF05E07AE8D656173880b2c019EA0BC473f4822EF';
+const SOLARCHARGE_ADDRESS = '0xDfA6D6c6FD6410b1A2F532d803CadD05811909d5';
 
-const SOLARCHARGE_ABI = [
+const SOLARCHARGE_ABI =  [
   {
     "inputs": [],
     "stateMutability": "nonpayable",
@@ -17,7 +17,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -30,7 +31,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -43,7 +45,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -56,7 +59,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -95,7 +99,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -134,7 +139,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -165,7 +171,8 @@ const SOLARCHARGE_ABI = [
     "name": "buyCoins",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
@@ -188,7 +195,8 @@ const SOLARCHARGE_ABI = [
     "name": "addStation",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
@@ -230,7 +238,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -264,7 +273,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -303,7 +313,8 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -322,11 +333,18 @@ const SOLARCHARGE_ABI = [
       }
     ],
     "stateMutability": "pure",
-    "type": "function"
+    "type": "function",
+    "constant": true
   }
 ];
 
+const MONGODB_USERNAME = 'root';
+const MONGODB_PASSWORD = 'password';
+
+
 module.exports = {
     SOLARCHARGE_ABI,
-    SOLARCHARGE_ADDRESS
+    SOLARCHARGE_ADDRESS,
+    MONGODB_USERNAME,
+    MONGODB_PASSWORD
 };
