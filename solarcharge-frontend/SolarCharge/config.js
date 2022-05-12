@@ -1,4 +1,4 @@
-const BASE_IP= '10.10.0.119';
+const BASE_IP= '11.10.10.104';
 
 export {
     BASE_IP

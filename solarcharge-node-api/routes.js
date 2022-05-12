@@ -1,6 +1,76 @@
 const web3 = require('web3')
+const bcrypt = require('bcrypt')
+const nodemailer = require('nodemailer')
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'solarcharge.application@gmail.com',
+    pass: 'solarCharge@123',
+  },
+})
 
 const routes = (app, db, accounts, SolarChargeContract) => {
+  // Check Email Exist
+  app.post('/checkEmail', async (req, res) => {
+    const { email, subject , body } = req.body
+    console.log('Email : ' + email)
+    try {
+      const user = await db.collection('users').findOne({ email: email })
+      if (user) {
+        console.log(user)
+        const mailConfigurations = {
+          from: 'solarcharge.application@gmail.com',
+          to: email,
+          subject: subject,
+          text: body,
+        }
+        transporter.sendMail(mailConfigurations, function(error, info){
+          if (error) throw Error(error);
+             console.log('Email Sent Successfully');
+          console.log(info);
+      });
+        res.json({
+          successStatus: true,
+          message: 'User exists. OTP sent successfully',
+        })
+      } else {
+        res.json({
+          successStatus: false,
+          message: 'Email id not registered',
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  })
+
+  // Change Password
+  app.post('/changePassword', async (req, res) => {
+    const { email, password } = req.body
+    console.log('Email : ' + email)
+    console.log('Password : ' + password)
+
+    try {
+      const salt = await bcrypt.genSalt(10)
+      const passwordEncrypt = await bcrypt.hash(password, salt)
+
+      await db
+        .collection('users')
+        .findOneAndUpdate(
+          { email: email },
+          { $set: { password: passwordEncrypt } },
+        )
+
+      res.json({
+        successStatus: true,
+        message: 'User password updated successfully.',
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  })
+
   // Register User
   app.post('/registerUser', async (req, res) => {
     const { email, name, password } = req.body
@@ -16,9 +86,12 @@ const routes = (app, db, accounts, SolarChargeContract) => {
           message: 'User already registered.Please login.',
         })
       } else {
+        const salt = await bcrypt.genSalt(10)
+        const passwordEncrypt = await bcrypt.hash(password, salt)
+
         await db
           .collection('users')
-          .insertOne({ email: email, name: name, password: password })
+          .insertOne({ email: email, name: name, password: passwordEncrypt })
 
         const result = await SolarChargeContract.methods
           .registerUser(email, name)
@@ -44,7 +117,8 @@ const routes = (app, db, accounts, SolarChargeContract) => {
     try {
       const user = await db.collection('users').findOne({ email: email })
       if (user) {
-        if (user.password !== password) {
+        const validPassword = await bcrypt.compare(password, user.password)
+        if (!validPassword) {
           res.json({
             successStatus: false,
             message: 'Incorrect password.',
@@ -130,8 +204,8 @@ const routes = (app, db, accounts, SolarChargeContract) => {
       res.json({
         successStatus: true,
         message: `Station with Id ${ID} activated successfully.`,
-        transactionId : result.transactionHash,
-        minutesCharged : duration
+        transactionId: result.transactionHash,
+        minutesCharged: duration,
       })
     } catch (e) {
       res.json({

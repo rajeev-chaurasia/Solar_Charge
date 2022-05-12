@@ -8,6 +8,7 @@ import HomePageScreen from './src/screens/HomePageScreen'
 import Wallet from './src/screens/WalletScreen'
 import Transaction from './src/screens/TransactionScreen'
 import TransactionDetail from './src/screens/TransactionDetailScreen'
+import ForgotPassword from './src/screens/ForgotPassword'
 
 
 const Stack = createStackNavigator()
@@ -31,6 +32,14 @@ function App() {
           options={{
             headerShown: false,
             title: 'Solar Charge',
+          }}
+        />
+
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
+          options={{
+            headerShown : false,
           }}
         />
 
